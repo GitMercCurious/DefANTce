@@ -1,0 +1,5 @@
+# clion stuff
+.idea/*
+
+# strange stuff from cmake (or may be not)
+cmake-build-debug/*
