@@ -7,17 +7,21 @@
 /* class that will model the system */
 class Model {
 private:
-    const RenderingQueue *pRenderingQueue; /* queue where we put what we want to draw */
+    RenderingQueue *pRenderingQueue; /* queue where we put what we want to draw */
 
-    const ModellingQueue *pModellingQueue; /* queue that tells us what happens outside */
+    ModellingQueue *pModellingQueue; /* queue that tells us what happens outside */
 
     std::list<Particle> system;
+
+    static Model *pInstance;
 public:
     Model(
-        const RenderingQueue * const,
-        const ModellingQueue * const
+        RenderingQueue *,
+        ModellingQueue *
     );
     ~Model();
+
+    static Model *getInstance();
 
     void modelFrame(); /* the controller will call this every frame,
                           our task is to update window and poll user events */

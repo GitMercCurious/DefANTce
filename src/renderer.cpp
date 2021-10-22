@@ -2,6 +2,7 @@
 
 #include <consts.h>
 #include <queue.h>
+#include <model.h>
 
 Renderer::Renderer(Extent2D * pExtent, RenderingQueue * pRenderingQueue,
              ModellingQueue * pModellingQueue)

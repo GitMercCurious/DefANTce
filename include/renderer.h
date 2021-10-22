@@ -28,7 +28,7 @@ public:
     );
     ~Renderer();
 
-    Renderer *getInstance(); /* FIXME: bad global variable implementation */
+    static Renderer *getInstance(); /* FIXME: bad global variable implementation */
 
     int renderFrame(); /* the controller will call this every frame,
                           our task is to update window and poll user events */
