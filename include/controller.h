@@ -24,7 +24,7 @@ private:
     /* enf of queues */
 
 public:
-    Controller(const Extent2D const *);
+    Controller(const Extent2D * const);
     ~Controller();
 
     void run(); /* main loop will live here */

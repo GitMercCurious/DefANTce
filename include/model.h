@@ -14,8 +14,8 @@ private:
     std::list<Particle> system;
 public:
     Model(
-        const RenderingQueue const *,
-        const ModellingQueue const *
+        const RenderingQueue * const,
+        const ModellingQueue * const
     );
     ~Model();
 

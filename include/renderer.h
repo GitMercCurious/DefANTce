@@ -12,20 +12,23 @@
 class Renderer {
 private:
     /* sfml stuff */
-    const sf::RenderWindow window;
+    sf::RenderWindow window;
     /* end of sfml stuff */
 
-    const RenderingQueue *pRenderingQueue; /* queue that tells us what we need to draw */
+    RenderingQueue *pRenderingQueue; /* queue that tells us what we need to draw */
 
-    const ModellingQueue *pModellingQueue; /* queue where we put events from user */
+    ModellingQueue *pModellingQueue; /* queue where we put events from user */
 
+    static Renderer *pInstance;
 public:
     Renderer(
-        const Extent2D const *,
-        const RenderingQueue const *,
-        const ModellingQueue const *
+        Extent2D *,
+        RenderingQueue *,
+        ModellingQueue *
     );
     ~Renderer();
+
+    Renderer *getInstance(); /* FIXME: bad global variable implementation */
 
     int renderFrame(); /* the controller will call this every frame,
                           our task is to update window and poll user events */

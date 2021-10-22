@@ -9,22 +9,28 @@ Model::Model(const RenderingQueue const *pRenderingQueue,
     : pRenderingQueue = pRenderingQueue
     , pModellingQueue = pModellingQueue
     , system = std::list<Particle>()
+    , pInstance = this
 {}
 
 Model::~Model() {}
 
+static Model *Model::getInstance() {
+    return pInstance;
+}
+
 void Model::modelFrame() {
     /* polling pModellingQueue */
-    pModellingQueue->poll([](const ModellingQueueEvent &ev) {
+    pModellingQueue->poll([system](const ModellingQueue &ev) {
         switch (ev.eType) {
-            case ModellingQueueEventType::INVALID:
+            case ModellingQueueEventType::mINVALID:
                 break;
-            case ModellingQueueEventType::ADD_PARTICLE:
+            case ModellingQueueEventType::mADD_PARTICLE:
                 double angle;
                 double r = 1.0;
+                RenderData *data = (RenderData *)ev->data;
                 std::uniform_real_distribution<double> d(min, max);
                 angle = d(std::default_random_engine(std::chrono::steady_clock::now().time_since_epoch().count()));
-                ev.pModel->system.emplace_back(ev.x, ev.y, r * cos(angle), r * sin(angle));
+                system.emplace_back(data->x, data->y, r * cos(angle), r * sin(angle));
                 break;
             default:
                 break;
@@ -37,8 +43,8 @@ void Model::modelFrame() {
         if (particle->x >= 0 && particle->x < Extent2D->width &&
             particle->y >= 0 && particle->y < Extent2D->height) {
             /* adding event to pRenderingQueue */
-            Extent2D *ppos = new Extent2D({particle->x, particle->y});
-            pRenderingQueue->add(RenderingQueueEventType::RENDER_PARTICLE, ppos);
+            RenderData *pRenderData = new RenderData({particle->x, particle->y});
+            pRenderingQueue->add(RenderingQueueEventType::rRENDER_PARTICLE, pRenderData);
         } else {
             /* marking particle as invalid */
             particle->valid = false;
