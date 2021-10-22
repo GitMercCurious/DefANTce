@@ -3,3 +3,6 @@
 
 # strange stuff from cmake (or may be not)
 cmake-build-debug/*
+
+# build
+build/*
