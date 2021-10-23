@@ -29,6 +29,8 @@ void Field::update(float dt) {
             object->velocity[1] = -object->velocity[1];
         }
     }
+    // Model got updated;
+    invoke();
 }
 
 void Field::add_circle(const Circle& circle) {

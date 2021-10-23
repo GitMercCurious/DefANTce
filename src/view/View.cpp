@@ -3,6 +3,8 @@
 //
 
 #include "View.h"
+#include "view/events/Exit.h"
+#include "view/events/Mouse.h"
 
 View *View::get_instance(Vector2f resolution) {
     static View instance(resolution);
@@ -13,6 +15,7 @@ View* View::init(){
     auto view = get_instance();
     view->window.create(sf::VideoMode(view->resolution[0], view->resolution[1]), "Test", sf::Style::Default);
     view->window.setFramerateLimit(60);
+    return view;
 }
 
 View::View(Vector2f resolution):
@@ -30,4 +33,18 @@ void View::draw_circle(float radius, const Vector2f &position) {
 void View::clear() {
     auto view = get_instance();
     view->window.clear();
+}
+
+void View::handle_events() {
+    sf::Event event{};
+    auto view = get_instance();
+    while (view->window.pollEvent(event)){
+        if(event.type == sf::Event::Closed){
+            ExitEvent().invoke();
+        }
+        if(event.type == sf::Event::MouseButtonPressed){
+            if(event.mouseButton.button == sf::Mouse::Left)
+                MouseClick(Vector2f{float(event.mouseButton.x), float(event.mouseButton.y)}).invoke();
+        }
+    }
 }

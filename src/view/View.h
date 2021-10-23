@@ -25,7 +25,7 @@ public:
     static void draw_circle(float radius, const Vector2f& position);
     static void clear();
 
-
+    static void handle_events();
 };
 
 #endif //DEFANTCE_VIEW_H
