@@ -36,17 +36,20 @@ template<typename EventType>
 class Event {
 // Something that all Events share (but each have it's own)
 private:
-    static std::vector<std::function<void(Event<EventType>*)>*> event_listeners;
+    static std::vector<std::function<void(const EventType&)>> event_listeners;
 public:
-    static void add_event_listener(std::function<void(Event<EventType>*)> func){
-        event_listeners.push_front(&func);
+    static void add_event_listener(std::function<void(const EventType&)> func){
+        event_listeners.push_back(func);
     }
 
-    void invoke() {
+    virtual void invoke() {
         for(auto& listener : event_listeners){
-            (*listener)(this);
+            listener(*((EventType*)this));
         }
     }
 };
+
+template <typename T>
+std::vector<std::function<void(const T&)>> Event<T>::event_listeners{};
 
 #endif //DEFANTCE_EVENT_H

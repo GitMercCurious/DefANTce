@@ -18,7 +18,7 @@
 class App {
     Field field;
     View* view;
-
+public:
     App();
     void loop();
 };

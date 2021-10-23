@@ -10,7 +10,8 @@
 
 // singleton
 class View {
-private:
+//private:
+public:
     explicit View(Vector2f resolution);
 
     Vector2f resolution;

@@ -11,7 +11,7 @@
 //For Giggles
 #include "utility/Event.h"
 
-class Field : public Event<Field> {
+class Field: public Event<Field>{
 private:
     std::vector<Circle> game_objects;
     float sizeX;

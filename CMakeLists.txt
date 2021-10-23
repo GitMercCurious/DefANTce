@@ -14,6 +14,8 @@ add_executable(DefANTce main.cpp
 
 if (WIN32)
     set(SFML_DIR ../SFML-2.5.1/lib/cmake/SFML)
+    file(GLOB BINARY_DEP_DLLS "../SFML-2.5.1/bin/*.dll")
+    file(COPY ${BINARY_DEP_DLLS} DESTINATION ${CMAKE_BINARY_DIR})
 endif()
 
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
