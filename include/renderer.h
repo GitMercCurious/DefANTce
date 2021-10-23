@@ -17,18 +17,22 @@ private:
 
     RenderingQueue *pRenderingQueue; /* queue that tells us what we need to draw */
 
-    ModellingQueue *pModellingQueue; /* queue where we put events from user */
+    ModelingQueue *pModelingQueue; /* queue where we put events from user */
 
-    static Renderer *pInstance;
-public:
     Renderer(
-        Extent2D *,
+        const Extent2D *,
         RenderingQueue *,
-        ModellingQueue *
+        ModelingQueue *
     );
+public:
     ~Renderer();
 
     static Renderer *getInstance(); /* FIXME: bad global variable implementation */
+    static Renderer *setInstance(
+        const Extent2D *,
+        RenderingQueue *,
+        ModelingQueue *
+    );
 
     int renderFrame(); /* the controller will call this every frame,
                           our task is to update window and poll user events */

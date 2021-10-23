@@ -10,33 +10,36 @@
 std::default_random_engine r_engine = std::default_random_engine(std::chrono::steady_clock::now().time_since_epoch().count());
 
 Model::Model(RenderingQueue *pRenderingQueue,
-             ModellingQueue *pModellingQueue)
+             ModelingQueue *pModelingQueue)
     : pRenderingQueue(pRenderingQueue)
-    , pModellingQueue(pModellingQueue)
+    , pModelingQueue(pModelingQueue)
     , system(std::list<Particle>())
-{
-    pInstance = this;
-}
+{}
 
 Model::~Model() {}
 
+Model *Model::setInstance(RenderingQueue *pRenderingQueue, ModelingQueue *pModelingQueue) {
+    static Model model(pRenderingQueue, pModelingQueue);
+    return &model;
+}
+
 Model *Model::getInstance() {
-    return pInstance;
+    return setInstance(nullptr, nullptr);
 }
 
 void Model::modelFrame() {
-    /* polling pModellingQueue */
-    pModellingQueue->poll([](const ModellingQueueEvent &ev) {
+    /* polling pModelingQueue */
+    pModelingQueue->poll([](const ModelingQueueEvent &ev) {
         switch (ev.eType) {
-            case ModellingQueueEventType::mINVALID:
+            case ModelingQueueEventType::mINVALID:
                 break;
-            case ModellingQueueEventType::mADD_PARTICLE:
+            case ModelingQueueEventType::mADD_PARTICLE:
             {
                 double angle;
-                double r = 1.0;
+                double r = VEL;
                 std::uniform_real_distribution<double> d(0, 2*M_PI);
                 angle = d(r_engine);
-                Model::getInstance()->system.emplace_back({ev.data->x, ev.data->y}, {r * cos(angle), r * sin(angle)});
+                Model::getInstance()->system.push_back({{ev.data->x, ev.data->y}, {r * cos(angle), r * sin(angle)}, true});
                 break;
             }
             default:
@@ -47,8 +50,8 @@ void Model::modelFrame() {
     for (auto &particle : system) { /* FIXME: try to do everything in 1 pass */
         particle.x += particle.vx / FPS;
         particle.y += particle.vy / FPS;
-        if (particle.x >= 0 && particle.x < WINDOW_EXTENT.width &&
-            particle.y >= 0 && particle.y < WINDOW_EXTENT.height) {
+        if (particle.x >= 0 && particle.x < WINDOW_EXTENT_X &&
+            particle.y >= 0 && particle.y < WINDOW_EXTENT_Y) {
             /* adding event to pRenderingQueue */
             RenderData *pRenderData = new RenderData({particle.x, particle.y});
             pRenderingQueue->add(RenderingQueueEventType::rRENDER_PARTICLE, pRenderData);

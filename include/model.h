@@ -9,19 +9,24 @@ class Model {
 private:
     RenderingQueue *pRenderingQueue; /* queue where we put what we want to draw */
 
-    ModellingQueue *pModellingQueue; /* queue that tells us what happens outside */
+    ModelingQueue *pModelingQueue; /* queue that tells us what happens outside */
 
     std::list<Particle> system;
 
-    static Model *pInstance;
-public:
     Model(
         RenderingQueue *,
-        ModellingQueue *
+        ModelingQueue *
     );
+public:
+    Model(const Model &) = delete;
+    Model &operator=(const Model &) = delete;
     ~Model();
 
     static Model *getInstance();
+    static Model *setInstance(
+        RenderingQueue *,
+        ModelingQueue *
+    );
 
     void modelFrame(); /* the controller will call this every frame,
                           our task is to update window and poll user events */

@@ -11,20 +11,20 @@
 class Controller {
 private:
     /* Renderer stuff */
-    const Renderer *pRenderer;
+    Renderer *pRenderer;
     /* end of Renderer stuff */
 
     /* Model stuff */
-    const Model *pModel;
+    Model *pModel;
     /* end of Model stuff */
 
     /* queues */
-    const RenderingQueue *pRenderingQueue;
-    const ModellingQueue *pModellingQueue;
+    RenderingQueue *pRenderingQueue;
+    ModelingQueue *pModelingQueue;
     /* enf of queues */
 
 public:
-    Controller(const Extent2D * const);
+    Controller(const Extent2D *);
     ~Controller();
 
     void run(); /* main loop will live here */

@@ -3,10 +3,16 @@
 
 #include <misc.h>
 
-const Extent2D WINDOW_EXTENT = {800, 800};
+#define WINDOW_EXTENT_X 800
+#define WINDOW_EXTENT_Y 800
 
-const double FPS = 30.0;
+#define FPS 30.0
+#define T_1SEC 1000.0
 
-const char *APP_NAME = "Balls";
+#define APP_NAME "Balls"
+
+#define VEL 50
+
+#define SIRCLE_SIZE 30
 
 #endif

@@ -16,7 +16,7 @@ include_directories(include)
 
 add_compile_options(
   "-Wall;-Wextra;-O2"
-  "$<$<CONFIG:DEBUG>:-O0;-g3;-ggdb;-Werror>"
+  "$<$<CONFIG:DEBUG>:-O0;-g3;-ggdb>"
 )
 
 set(EXEC

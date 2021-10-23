@@ -1,7 +1,14 @@
 #include <queue.h>
 
+#include <iostream>
+
 RenderingQueue::RenderingQueue() {}
 RenderingQueue::~RenderingQueue() {} /* FIXME: possible leak */
+
+RenderingQueue *RenderingQueue::getInstance() {
+    static RenderingQueue renderingQueue;
+    return &renderingQueue;
+}
 
 void RenderingQueue::poll(void (*callback)(const RenderingQueueEvent &)) {
     for (auto &event : queue) {
@@ -13,13 +20,18 @@ void RenderingQueue::poll(void (*callback)(const RenderingQueueEvent &)) {
 }
 
 void RenderingQueue::add(RenderingQueueEventType type, RenderData *data) {
-    queue.emplace_back({type, data});
+    queue.push_back({type, data});
 }
 
-ModellingQueue::ModellingQueue() {}
-ModellingQueue::~ModellingQueue() {} /* FIXME: possible leak */
+ModelingQueue::ModelingQueue() {}
+ModelingQueue::~ModelingQueue() {} /* FIXME: possible leak */
 
-void ModellingQueue::poll(void (*callback)(const ModellingQueueEvent &)) {
+ModelingQueue *ModelingQueue::getInstance() {
+    static ModelingQueue modellingQueue;
+    return &modellingQueue;
+}
+
+void ModelingQueue::poll(void (*callback)(const ModelingQueueEvent &)) {
     for (auto &event : queue) {
         callback(event);
         delete event.data;
@@ -28,6 +40,6 @@ void ModellingQueue::poll(void (*callback)(const ModellingQueueEvent &)) {
     queue.clear();
 }
 
-void ModellingQueue::add(ModelingQueueEventType type, ModelData *data) {
-    queue.emplace_back({type, data});
+void ModelingQueue::add(ModelingQueueEventType type, ModelData *data) {
+    queue.push_back({type, data});
 }

@@ -4,30 +4,35 @@
 #include <queue.h>
 #include <model.h>
 
-Renderer::Renderer(Extent2D * pExtent, RenderingQueue * pRenderingQueue,
-             ModellingQueue * pModellingQueue)
+Renderer::Renderer(const Extent2D * pExtent, RenderingQueue * pRenderingQueue,
+             ModelingQueue * pModelingQueue)
     : pRenderingQueue(pRenderingQueue)
-    , pModellingQueue(pModellingQueue)
+    , pModelingQueue(pModelingQueue)
     , window(sf::VideoMode(pExtent->width, pExtent->height), APP_NAME)
-{
-    pInstance = this;
-}
+{}
 
 Renderer::~Renderer() {}
 
+Renderer *Renderer::setInstance(const Extent2D * pExtent, RenderingQueue * pRenderingQueue,
+             ModelingQueue * pModelingQueue) {
+    static Renderer renderer(pExtent, pRenderingQueue, pModelingQueue);
+    return &renderer;
+}
+
 Renderer *Renderer::getInstance() {
-    return pInstance;
+    return setInstance(nullptr, nullptr, nullptr);
 }
 
 int Renderer::renderFrame() {
+    window.clear(sf::Color::Green);
     pRenderingQueue->poll([](const RenderingQueueEvent &ev) {
-        sf::CircleShape circle(50.0f);
+        sf::CircleShape circle(SIRCLE_SIZE);
         switch (ev.eType) {
             case RenderingQueueEventType::rINVALID:
                 break;
             case RenderingQueueEventType::rRENDER_PARTICLE:
                 circle.setFillColor(sf::Color::Red);
-                circle.setPosition(ev.data->x, ev.data->y);
+                circle.setPosition(ev.data->x - SIRCLE_SIZE/2, ev.data->y - SIRCLE_SIZE/2);
                 Renderer::getInstance()->window.draw(circle);
                 break;
             default:
@@ -45,7 +50,7 @@ int Renderer::renderFrame() {
             case sf::Event::MouseButtonPressed:
                 if (event.mouseButton.button == sf::Mouse::Left) {
                     ModelData *pModelData = new ModelData({(double)event.mouseButton.x, (double)event.mouseButton.y});
-                    pModellingQueue->add(ModellingQueueEventType::mADD_PARTICLE, pModelData);
+                    pModelingQueue->add(ModelingQueueEventType::mADD_PARTICLE, pModelData);
                 }
                 break;
             default:
@@ -53,5 +58,6 @@ int Renderer::renderFrame() {
         }
     }
 
+    window.display();
     return 0;
 }
