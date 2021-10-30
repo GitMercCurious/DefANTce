@@ -32,7 +32,7 @@ int Renderer::renderFrame() {
                 break;
             case RenderingQueueEventType::rRENDER_PARTICLE:
                 circle.setFillColor(sf::Color::Red);
-                circle.setPosition(ev.data->x - SIRCLE_SIZE/2, ev.data->y - SIRCLE_SIZE/2);
+                circle.setPosition(ev.data->x - SIRCLE_SIZE, ev.data->y - SIRCLE_SIZE);
                 Renderer::getInstance()->window.draw(circle);
                 break;
             default:
