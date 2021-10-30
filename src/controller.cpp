@@ -5,11 +5,20 @@
 #include <chrono>
 #include <thread>
 
-Controller::Controller(const Extent2D *window_extent) {
+Controller::Controller() {
     pRenderingQueue = RenderingQueue::getInstance();
     pModelingQueue = ModelingQueue::getInstance();
-    pRenderer = Renderer::setInstance(window_extent, this->pRenderingQueue, this->pModelingQueue);
-    pModel = Model::setInstance(this->pRenderingQueue, this->pModelingQueue);
+    
+    Renderer::settings = rendererSettings;
+    Model::settings = modelSettings;
+
+    Renderer::pRenderingQueue = pRenderingQueue;
+    Renderer::pModelingQueue = pModelingQueue;
+    Model::pRenderingQueue = pRenderingQueue;
+    Model::pModelingQueue = pModelingQueue;
+
+    pRenderer = Renderer::getInstance();
+    pModel = Model::getInstance();
 }
 
 Controller::~Controller() {}
@@ -23,6 +32,6 @@ void Controller::run() {
         }
         auto t_end = std::chrono::high_resolution_clock::now();
         double elapsed_time_ms = std::chrono::duration<double, std::milli>(t_end-t_start).count();
-        std::this_thread::sleep_for(std::chrono::milliseconds((int)(T_1SEC / FPS - elapsed_time_ms)));
+        std::this_thread::sleep_for(std::chrono::milliseconds((int)(1000.0 / FPS - elapsed_time_ms)));
     }
 }

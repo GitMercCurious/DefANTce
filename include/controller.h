@@ -7,6 +7,8 @@
 #include <queue.h>
 #include <misc.h>
 
+#include <string>
+
 /* class that will be a middleman between renderer and model */
 class Controller {
 private:
@@ -24,7 +26,10 @@ private:
     /* enf of queues */
 
 public:
-    Controller(const Extent2D *);
+    inline static ModelSettings modelSettings;
+    inline static RendererSettings rendererSettings;
+
+    Controller();
     ~Controller();
 
     void run(); /* main loop will live here */

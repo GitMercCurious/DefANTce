@@ -3,16 +3,19 @@
 
 #include <misc.h>
 
-#define WINDOW_EXTENT_X 800
-#define WINDOW_EXTENT_Y 800
+#include <string>
 
-#define FPS 30.0
-#define T_1SEC 1000.0
+const Extent2D WINDOW_EXTENT = {800, 800,};
 
-#define APP_NAME "Balls"
+const float FPS = 30.0;
 
-#define VEL 50
+const std::string APP_NAME = "Balls";
 
-#define SIRCLE_SIZE 30
+const float VEL = 50.0;
+
+const int CIRCLE_SIZE = 30;
+
+const Color BALL_COLOR = {255, 0, 0, 255,};
+const Color BG_COLOR = {0, 255, 0, 255,};
 
 #endif

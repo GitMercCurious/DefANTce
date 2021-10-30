@@ -1,36 +1,30 @@
 #include <renderer.h>
 
-#include <consts.h>
 #include <queue.h>
-#include <model.h>
 
-Renderer::Renderer(const Extent2D * pExtent, RenderingQueue * pRenderingQueue,
-             ModelingQueue * pModelingQueue)
-    : pRenderingQueue(pRenderingQueue)
-    , pModelingQueue(pModelingQueue)
-    , window(sf::VideoMode(pExtent->width, pExtent->height), APP_NAME)
+Renderer::Renderer()
+    : window(sf::VideoMode(settings.extent.width, settings.extent.height), settings.app_name)
 {}
 
 Renderer::~Renderer() {}
 
-Renderer *Renderer::setInstance(const Extent2D * pExtent, RenderingQueue * pRenderingQueue,
-             ModelingQueue * pModelingQueue) {
-    static Renderer renderer(pExtent, pRenderingQueue, pModelingQueue);
+Renderer *Renderer::getInstance() {
+    static Renderer renderer;
     return &renderer;
 }
 
-Renderer *Renderer::getInstance() {
-    return setInstance(nullptr, nullptr, nullptr);
+sf::Color make_sfml_color(Color color) {
+    return sf::Color(color.r, color.g, color.b, color.a);
 }
 
 int Renderer::renderFrame() {
-    window.clear(sf::Color::Green);
+    window.clear(make_sfml_color(settings.bg_color));
     pRenderingQueue->poll([](const QueueEvent &ev) {
-        sf::CircleShape circle(SIRCLE_SIZE);
+        sf::CircleShape circle(settings.circle_size);
         switch (ev.eType) {
             case QueueEventType::RENDER_PARTICLE:
-                circle.setFillColor(sf::Color::Red);
-                circle.setPosition(ev.data->x - SIRCLE_SIZE, ev.data->y - SIRCLE_SIZE);
+                circle.setFillColor(make_sfml_color(settings.ball_color));
+                circle.setPosition(ev.data->x - settings.circle_size, ev.data->y - settings.circle_size);
                 Renderer::getInstance()->window.draw(circle);
                 break;
             case QueueEventType::INVALID:

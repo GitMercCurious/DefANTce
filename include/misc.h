@@ -4,8 +4,14 @@
 #include <cstdint>
 
 struct Extent2D {
-    uint32_t width;
-    uint32_t height;
+    union {
+        uint32_t width;
+        uint32_t x;
+    };
+    union {
+        uint32_t height;
+        uint32_t y;
+    };
 };
 
 struct Particle {
@@ -24,6 +30,13 @@ struct Particle {
         double v[2];
     };
     bool valid;
+};
+
+struct Color {
+    uint32_t r;
+    uint32_t g;
+    uint32_t b;
+    uint32_t a;
 };
 
 #endif

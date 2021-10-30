@@ -1,6 +1,5 @@
 #include <model.h>
 
-#include <consts.h>
 #include <queue.h>
 
 #include <cmath>
@@ -9,22 +8,15 @@
 
 std::default_random_engine r_engine = std::default_random_engine(std::chrono::steady_clock::now().time_since_epoch().count());
 
-Model::Model(RenderingQueue *pRenderingQueue,
-             ModelingQueue *pModelingQueue)
-    : pRenderingQueue(pRenderingQueue)
-    , pModelingQueue(pModelingQueue)
-    , system(std::list<Particle>())
+Model::Model()
+    : system(std::list<Particle>())
 {}
 
 Model::~Model() {}
 
-Model *Model::setInstance(RenderingQueue *pRenderingQueue, ModelingQueue *pModelingQueue) {
-    static Model model(pRenderingQueue, pModelingQueue);
-    return &model;
-}
-
 Model *Model::getInstance() {
-    return setInstance(nullptr, nullptr);
+    static Model model;
+    return &model;
 }
 
 void Model::modelFrame() {
@@ -34,7 +26,7 @@ void Model::modelFrame() {
             case QueueEventType::ADD_PARTICLE:
             {
                 double angle;
-                double r = VEL;
+                double r = settings.velocity;
                 std::uniform_real_distribution<double> d(0, 2*M_PI);
                 angle = d(r_engine);
                 Model::getInstance()->system.push_back({{ev.data->x, ev.data->y}, {r * cos(angle), r * sin(angle)}, true});
@@ -48,10 +40,10 @@ void Model::modelFrame() {
     });
 
     for (auto &particle : system) { /* FIXME: try to do everything in 1 pass */
-        particle.x += particle.vx / FPS;
-        particle.y += particle.vy / FPS;
-        if (particle.x >= 0 && particle.x < WINDOW_EXTENT_X &&
-            particle.y >= 0 && particle.y < WINDOW_EXTENT_Y) {
+        particle.x += particle.vx / settings.fps;
+        particle.y += particle.vy / settings.fps;
+        if (particle.x >= 0 && particle.x < settings.extent.x &&
+            particle.y >= 0 && particle.y < settings.extent.y) {
             /* adding event to pRenderingQueue */
             auto *pRenderData = new QueueData({particle.x, particle.y});
             pRenderingQueue->add(QueueEventType::RENDER_PARTICLE, pRenderData);
