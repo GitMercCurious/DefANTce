@@ -29,11 +29,9 @@ Model *Model::getInstance() {
 
 void Model::modelFrame() {
     /* polling pModelingQueue */
-    pModelingQueue->poll([](const ModelingQueueEvent &ev) {
+    pModelingQueue->poll([](const QueueEvent &ev) {
         switch (ev.eType) {
-            case ModelingQueueEventType::mINVALID:
-                break;
-            case ModelingQueueEventType::mADD_PARTICLE:
+            case QueueEventType::ADD_PARTICLE:
             {
                 double angle;
                 double r = VEL;
@@ -42,6 +40,8 @@ void Model::modelFrame() {
                 Model::getInstance()->system.push_back({{ev.data->x, ev.data->y}, {r * cos(angle), r * sin(angle)}, true});
                 break;
             }
+            case QueueEventType::INVALID:
+                break; /* TODO: handle this case */
             default:
                 break;
         }
@@ -53,8 +53,8 @@ void Model::modelFrame() {
         if (particle.x >= 0 && particle.x < WINDOW_EXTENT_X &&
             particle.y >= 0 && particle.y < WINDOW_EXTENT_Y) {
             /* adding event to pRenderingQueue */
-            RenderData *pRenderData = new RenderData({particle.x, particle.y});
-            pRenderingQueue->add(RenderingQueueEventType::rRENDER_PARTICLE, pRenderData);
+            auto *pRenderData = new QueueData({particle.x, particle.y});
+            pRenderingQueue->add(QueueEventType::RENDER_PARTICLE, pRenderData);
         } else {
             /* marking particle as invalid */
             particle.valid = false;

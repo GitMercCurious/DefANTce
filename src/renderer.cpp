@@ -25,16 +25,16 @@ Renderer *Renderer::getInstance() {
 
 int Renderer::renderFrame() {
     window.clear(sf::Color::Green);
-    pRenderingQueue->poll([](const RenderingQueueEvent &ev) {
+    pRenderingQueue->poll([](const QueueEvent &ev) {
         sf::CircleShape circle(SIRCLE_SIZE);
         switch (ev.eType) {
-            case RenderingQueueEventType::rINVALID:
-                break;
-            case RenderingQueueEventType::rRENDER_PARTICLE:
+            case QueueEventType::RENDER_PARTICLE:
                 circle.setFillColor(sf::Color::Red);
                 circle.setPosition(ev.data->x - SIRCLE_SIZE, ev.data->y - SIRCLE_SIZE);
                 Renderer::getInstance()->window.draw(circle);
                 break;
+            case QueueEventType::INVALID:
+                break; /* TODO: handle this case */
             default:
                 break;
         }
@@ -49,8 +49,8 @@ int Renderer::renderFrame() {
                 break;
             case sf::Event::MouseButtonPressed:
                 if (event.mouseButton.button == sf::Mouse::Left) {
-                    ModelData *pModelData = new ModelData({(double)event.mouseButton.x, (double)event.mouseButton.y});
-                    pModelingQueue->add(ModelingQueueEventType::mADD_PARTICLE, pModelData);
+                    auto *pModelData = new QueueData({(double)event.mouseButton.x, (double)event.mouseButton.y});
+                    pModelingQueue->add(QueueEventType::ADD_PARTICLE, pModelData);
                 }
                 break;
             default:

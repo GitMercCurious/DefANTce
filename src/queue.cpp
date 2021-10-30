@@ -2,15 +2,16 @@
 
 #include <iostream>
 
-RenderingQueue::RenderingQueue() {}
-RenderingQueue::~RenderingQueue() {} /* FIXME: possible leak */
+Queue::Queue() {}
+Queue::~Queue() {
+    for (auto &event : queue) {
+        delete event.data;
+    }
 
-RenderingQueue *RenderingQueue::getInstance() {
-    static RenderingQueue renderingQueue;
-    return &renderingQueue;
+    queue.clear();
 }
 
-void RenderingQueue::poll(void (*callback)(const RenderingQueueEvent &)) {
+void Queue::poll(void (*callback)(const QueueEvent &)) {
     for (auto &event : queue) {
         callback(event);
         delete event.data;
@@ -19,27 +20,22 @@ void RenderingQueue::poll(void (*callback)(const RenderingQueueEvent &)) {
     queue.clear();
 }
 
-void RenderingQueue::add(RenderingQueueEventType type, RenderData *data) {
+void Queue::add(QueueEventType type, QueueData *data) {
     queue.push_back({type, data});
 }
 
+RenderingQueue::RenderingQueue() {}
+RenderingQueue::~RenderingQueue() {}
+
 ModelingQueue::ModelingQueue() {}
-ModelingQueue::~ModelingQueue() {} /* FIXME: possible leak */
+ModelingQueue::~ModelingQueue() {}
 
 ModelingQueue *ModelingQueue::getInstance() {
     static ModelingQueue modellingQueue;
     return &modellingQueue;
 }
 
-void ModelingQueue::poll(void (*callback)(const ModelingQueueEvent &)) {
-    for (auto &event : queue) {
-        callback(event);
-        delete event.data;
-    }
-
-    queue.clear();
-}
-
-void ModelingQueue::add(ModelingQueueEventType type, ModelData *data) {
-    queue.push_back({type, data});
+RenderingQueue *RenderingQueue::getInstance() {
+    static RenderingQueue renderingQueue;
+    return &renderingQueue;
 }

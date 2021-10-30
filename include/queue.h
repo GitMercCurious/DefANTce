@@ -3,60 +3,47 @@
 
 #include <list>
 
-enum RenderingQueueEventType {
-    rINVALID = 0,
-    rRENDER_PARTICLE,
+enum QueueEventType {
+    INVALID = 0,
+    RENDER_PARTICLE,
+    ADD_PARTICLE,
 };
 
-enum ModelingQueueEventType {
-    mINVALID = 0,
-    mADD_PARTICLE,
-};
-
-struct RenderData {
+struct QueueData {
     double x;
     double y;
 };
 
-struct ModelData {
-    double x;
-    double y;
+struct QueueEvent {
+    enum QueueEventType eType;
+    QueueData *data;
 };
 
-struct RenderingQueueEvent {
-    enum RenderingQueueEventType eType;
-    RenderData *data;
-};
-
-struct ModelingQueueEvent {
-    enum ModelingQueueEventType eType;
-    ModelData *data;
-};
-
-class RenderingQueue {
+class Queue {
 private:
-    std::list<RenderingQueueEvent> queue;
+    std::list<QueueEvent> queue;
+public:
+    Queue();
+    ~Queue();
+
+    void poll(void (*callback)(const QueueEvent &));
+    void add(QueueEventType, QueueData *);
+};
+
+class RenderingQueue : public Queue {
+private:
     RenderingQueue();
 public:
     ~RenderingQueue();
-
     static RenderingQueue *getInstance();
-
-    void poll(void (*callback)(const RenderingQueueEvent &));
-    void add(RenderingQueueEventType, RenderData *);
 };
 
-class ModelingQueue {
+class ModelingQueue : public Queue {
 private:
-    std::list<ModelingQueueEvent> queue;
     ModelingQueue();
 public:
     ~ModelingQueue();
-
     static ModelingQueue *getInstance();
-
-    void poll(void (*callback)(const ModelingQueueEvent &));
-    void add(ModelingQueueEventType, ModelData *);
 };
 
 #endif
