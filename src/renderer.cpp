@@ -21,12 +21,15 @@ int Renderer::renderFrame() {
     window.clear(make_sfml_color(settings.bg_color));
     pRenderingQueue->poll([](const QueueEvent &ev) {
         sf::CircleShape circle(settings.circle_size);
-        switch (ev.eType) {
+        switch (ev.getType()) {
             case QueueEventType::RENDER_PARTICLE:
+            {
+                auto *pEvent = dynamic_cast<const RenderParticleEvent *>(&ev);
                 circle.setFillColor(make_sfml_color(settings.ball_color));
-                circle.setPosition(ev.data->x - settings.circle_size, ev.data->y - settings.circle_size);
+                circle.setPosition(pEvent->x - settings.circle_size, pEvent->y - settings.circle_size);
                 Renderer::getInstance()->window.draw(circle);
                 break;
+            }
             case QueueEventType::INVALID:
                 break; /* TODO: handle this case */
             default:
@@ -43,8 +46,10 @@ int Renderer::renderFrame() {
                 break;
             case sf::Event::MouseButtonPressed:
                 if (event.mouseButton.button == sf::Mouse::Left) {
-                    auto *pModelData = new QueueData({(double)event.mouseButton.x, (double)event.mouseButton.y});
-                    pModelingQueue->add(QueueEventType::ADD_PARTICLE, pModelData);
+                    auto *pEvent = new AddParticleEvent;
+                    pEvent->x = (double)event.mouseButton.x;
+                    pEvent->y = (double)event.mouseButton.y;
+                    pModelingQueue->add(pEvent);
                 }
                 break;
             default:

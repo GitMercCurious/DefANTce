@@ -4,24 +4,24 @@
 
 Queue::Queue() {}
 Queue::~Queue() {
-    for (auto &event : queue) {
-        delete event.data;
+    for (auto pEvent : queue) {
+        delete pEvent;
     }
 
     queue.clear();
 }
 
 void Queue::poll(void (*callback)(const QueueEvent &)) {
-    for (auto &event : queue) {
-        callback(event);
-        delete event.data;
+    for (auto &pEvent : queue) {
+        callback(*pEvent);
+        delete pEvent;
     }
 
     queue.clear();
 }
 
-void Queue::add(QueueEventType type, QueueData *data) {
-    queue.push_back({type, data});
+void Queue::add(QueueEvent *pEvent) {
+    queue.push_back(pEvent);
 }
 
 RenderingQueue::RenderingQueue() {}
