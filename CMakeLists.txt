@@ -25,6 +25,7 @@ set(EXEC
     src/model.cpp
     src/controller.cpp
     src/queue.cpp
+    src/event.cpp
 )
 
 add_executable(DefANTce ${EXEC})

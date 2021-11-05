@@ -1,33 +1,18 @@
 #ifndef __QUEUE_H__
 #define __QUEUE_H__
 
+#include <event.h>
 #include <list>
-
-enum QueueEventType {
-    INVALID = 0,
-    RENDER_PARTICLE,
-    ADD_PARTICLE,
-};
-
-struct QueueData {
-    double x;
-    double y;
-};
-
-struct QueueEvent {
-    enum QueueEventType eType;
-    QueueData *data;
-};
 
 class Queue {
 private:
-    std::list<QueueEvent> queue;
+    std::list<QueueEvent *> queue;
 public:
     Queue();
     ~Queue();
 
     void poll(void (*callback)(const QueueEvent &));
-    void add(QueueEventType, QueueData *);
+    void add(QueueEvent *);
 };
 
 class RenderingQueue : public Queue {
