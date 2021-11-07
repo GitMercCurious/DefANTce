@@ -25,11 +25,14 @@ private:
     ModelingQueue *pModelingQueue;
     /* enf of queues */
 
+    Controller();
 public:
     inline static ModelSettings modelSettings;
     inline static RendererSettings rendererSettings;
 
-    Controller();
+    Controller(const Controller &) = delete;
+    Controller &operator=(const Controller &) = delete;
+    static Controller *getInstance();
     ~Controller();
 
     void run(); /* main loop will live here */

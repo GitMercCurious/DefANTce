@@ -30,10 +30,6 @@ public:
     ~Model();
 
     static Model *getInstance();
-    static Model *setInstance(
-        RenderingQueue *,
-        ModelingQueue *
-    );
 
     void modelFrame(); /* the controller will call this every frame,
                           our task is to update window and poll user events */

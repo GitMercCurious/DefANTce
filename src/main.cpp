@@ -17,8 +17,8 @@ int main() {
         .fps = FPS,
         .velocity = VEL,
     };
-    Controller controller;
-    controller.run();
+    Controller *pController = Controller::getInstance();
+    pController->run();
 
     return 0;
 }

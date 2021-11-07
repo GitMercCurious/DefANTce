@@ -21,6 +21,11 @@ Controller::Controller() {
     pModel = Model::getInstance();
 }
 
+Controller *Controller::getInstance() {
+    static Controller controller;
+    return &controller;
+}
+
 Controller::~Controller() {}
 
 void Controller::run() {
