@@ -2,26 +2,26 @@
 // Created by Meevere on 23.10.2021.
 //
 
-#include "View.h"
+#include "Drawer.h"
 #include "view/events/Exit.h"
 #include "view/events/Mouse.h"
 
-View *View::get_instance(Vector2f resolution) {
-    static View instance(resolution);
+Drawer *Drawer::get_instance(Vector2f resolution) {
+    static Drawer instance(resolution);
     return &instance;
 }
 
-View* View::init(){
+Drawer* Drawer::init(){
     auto view = get_instance();
     view->window.create(sf::VideoMode(view->resolution[0], view->resolution[1]), "Test", sf::Style::Default);
     view->window.setFramerateLimit(60);
     return view;
 }
 
-View::View(Vector2f resolution):
+Drawer::Drawer(Vector2f resolution):
 resolution(resolution){}
 
-void View::draw_circle(float radius, const Vector2f &position) {
+void Drawer::draw_circle(float radius, const Vector2f &position) {
     auto view = get_instance();
 
     sf::CircleShape shape(radius);
@@ -30,12 +30,12 @@ void View::draw_circle(float radius, const Vector2f &position) {
     view->window.draw(shape);
 }
 
-void View::clear() {
+void Drawer::clear() {
     auto view = get_instance();
     view->window.clear();
 }
 
-void View::handle_events() {
+void Drawer::handle_events() {
     sf::Event event{};
     auto view = get_instance();
     while (view->window.pollEvent(event)){
@@ -44,7 +44,16 @@ void View::handle_events() {
         }
         if(event.type == sf::Event::MouseButtonPressed){
             if(event.mouseButton.button == sf::Mouse::Left){};
-                MouseClick(Vector2f{float(event.mouseButton.x), float(event.mouseButton.y)}).invoke();
+                MouseClick(
+                        Vector2f{
+                            float(event.mouseButton.x),
+                            float(event.mouseButton.y)
+                        }).invoke();
         }
     }
+}
+
+void Drawer::display() {
+    auto drawer = get_instance();
+    drawer->window.display();
 }

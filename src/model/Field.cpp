@@ -36,3 +36,16 @@ void Field::update(float dt) {
 void Field::add_circle(const Circle& circle) {
     game_objects.push_back(circle);
 }
+
+void Field::generate_circle_at(Vector2f position) {
+    Vector2f velocity{
+        float(rand() % 100 - 50), float(rand() % 100 - 50)
+    };
+    Circle circle{float(rand() % 10 + 5), position, velocity};
+    this->game_objects.push_back(circle);
+    std::cout << "generated";
+}
+
+const std::vector<Circle> &Field::getGameObjects() const {
+    return game_objects;
+}

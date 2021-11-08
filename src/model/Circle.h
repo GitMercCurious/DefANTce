@@ -14,6 +14,7 @@ public:
     Vector2f velocity;
 
     Circle(float radius,const Vector2f& position);
+    Circle(float radius,const Vector2f& position, const Vector2f& velocity);
 
     void update(float dt);
 };

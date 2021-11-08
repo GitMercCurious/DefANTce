@@ -6,20 +6,20 @@
 #define DEFANTCE_EVENT_H
 
 /**
- Example of an Event class
+ Example of an EventWrapper class
 
- class Event {
+ class EventWrapper {
 // Something that all Events share (but each have it's own)
  private:
-    static std::vector<std::function<void(Event)>*> event_listeners;
+    static std::vector<std::function<void(EventWrapper)>*> event_listeners;
  public:
-    static add_event_listener(std::function<void(Event)> func){
+    static add_event_listener(std::function<void(EventWrapper)> func){
         event_listeners.push_front(func);
     }
 
 // Main body
     int property;
-    Event(property);
+    EventWrapper(property);
 
     void invoke() {
         for(auto& listener : event_listeners){
@@ -32,24 +32,35 @@
 #include <functional>
 #include <vector>
 
-template<typename EventType>
 class Event {
+    virtual void invoke() = 0;
+};
+
+template<typename EventType>
+class EventWrapper : Event {
 // Something that all Events share (but each have it's own)
 private:
     static std::vector<std::function<void(const EventType&)>> event_listeners;
 public:
-    static void add_event_listener(std::function<void(const EventType&)> func){
+    static void add_event_listener(const std::function<void(const EventType&)>& func){
         event_listeners.push_back(func);
     }
 
-    virtual void invoke() {
-        for(auto& listener : event_listeners){
+    static void add_event_listener(const std::function<void()>& func){
+        event_listeners.push_back([func](const EventType& e){
+            func();
+        });
+    }
+
+    virtual void invoke() final {
+        for(auto& listener : event_listeners)
+            // Casting EventWrapper<EventType> to EventType
+            // It always works cuz there are none standalone EventWrapper<EventType> objects
             listener(*((EventType*)this));
-        }
     }
 };
 
 template <typename T>
-std::vector<std::function<void(const T&)>> Event<T>::event_listeners{};
+std::vector<std::function<void(const T&)>> EventWrapper<T>::event_listeners{};
 
 #endif //DEFANTCE_EVENT_H

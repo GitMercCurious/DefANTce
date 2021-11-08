@@ -6,7 +6,7 @@
 #define DEFANTCE_APP_H
 
 #include "model/Field.h"
-#include "view/View.h"
+#include "view/Drawer.h"
 
 #include "utility/Vector.h"
 
@@ -17,10 +17,14 @@
 
 class App {
     Field field;
-    View* view;
+    Drawer* view;
+
+    bool is_running;
 public:
     App();
     void loop();
+
+    void end();
 };
 
 

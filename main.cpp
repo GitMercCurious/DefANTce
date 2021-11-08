@@ -1,24 +1,30 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-
-#include "utility/Event.h"
-
-//class Test : public Event<Test>{};
-//
-//void Foo(const Event<Test>&){
-//    std::cout << "Hey";
-//}
+#include <memory>
+#include <functional>
 
 #include "controller/App.h"
-#include "view/View.h"
+#include "view/Drawer.h"
+
+//void foo(){
+//    std::cout << "Foo" << std::endl;
+//}
+//
+//
+//typedef void(*void_func)();
 
 int main()
 {
     App temp{};
     temp.loop();
-
-//    Test temp;
-//    Test::add_event_listener(&Foo);
-//    temp.invoke();
-    return 0;
+//    std::vector<std::function<void(void)>> f_arr;
+//    for(i=0; i<100; ++i){
+//        f_arr.emplace_back([i](){
+//            std::cout << i << ' ';
+//        });
+//    }
+//    for(i=0; i<100; ++i){
+//        f_arr[i]();
+//    }
+//    return 0;
 }

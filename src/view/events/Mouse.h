@@ -8,12 +8,12 @@
 #include "utility/Event.h"
 #include "utility/Vector.h"
 
-//class MouseMove: public Event<MouseMove> {
+//class MouseMove: public EventWrapper<MouseMove> {
 //public:
 //    Vector2f position;
 //};
 
-class MouseClick: public Event<MouseClick> {
+class MouseClick: public EventWrapper<MouseClick> {
 public:
     Vector2f position;
     MouseClick(Vector2f position);

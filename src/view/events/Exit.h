@@ -6,6 +6,6 @@
 #define DEFANTCE_EXIT_H
 
 #include "utility/Event.h"
-class ExitEvent: public Event<ExitEvent> {};
+class ExitEvent: public EventWrapper<ExitEvent> {};
 
 #endif //DEFANTCE_EXIT_H

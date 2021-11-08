@@ -11,7 +11,11 @@
 //For Giggles
 #include "utility/Event.h"
 
-class Field: public Event<Field>{
+class Field: public EventWrapper<Field>{
+private:
+public:
+    const std::vector<Circle> &getGameObjects() const;
+
 private:
     std::vector<Circle> game_objects;
     float sizeX;
@@ -21,6 +25,9 @@ public:
 
     void update(float dt);
     void add_circle(const Circle& circle);
+
+    void generate_circle_at(Vector2f position);
+
 };
 
 

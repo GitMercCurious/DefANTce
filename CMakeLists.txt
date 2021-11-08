@@ -7,10 +7,10 @@ add_executable(DefANTce main.cpp
         src/model/Circle.cpp
         src/model/Circle.h
         src/utility/Vector.h
-        src/view/View.cpp
-        src/view/View.h
+        src/view/Drawer.cpp
+        src/view/Drawer.h
         src/model/Field.cpp
-        src/model/Field.h src/utility/Event.h src/view/events/Mouse.h src/controller/App.cpp src/controller/App.h src/view/events/Exit.h src/view/events/Mouse.cpp)
+        src/model/Field.h src/utility/Event.h src/view/events/Mouse.h src/controller/App.cpp src/controller/App.h src/view/events/Exit.h src/view/events/Mouse.cpp src/view/View.cpp src/view/View.h src/utility/Eventer.h)
 
 if (WIN32)
     set(SFML_DIR ../SFML-2.5.1/lib/cmake/SFML)
