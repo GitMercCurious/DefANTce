@@ -26,6 +26,7 @@ set(EXEC
     src/controller.cpp
     src/queue.cpp
     src/event.cpp
+    src/fps_utils.cpp
 )
 
 add_executable(DefANTce ${EXEC})

@@ -2,6 +2,8 @@
 #define __QUEUE_H__
 
 #include <event.h>
+
+#include <functional>
 #include <list>
 
 class Queue {
@@ -11,7 +13,8 @@ public:
     Queue();
     ~Queue();
 
-    void poll(void (*callback)(const QueueEvent &));
+    /* void poll(void (*callback)(const QueueEvent &)); */
+    void poll(std::function<void(const QueueEvent &)>);
     void add(QueueEvent *);
 };
 
@@ -29,6 +32,14 @@ private:
 public:
     ~ModelingQueue();
     static ModelingQueue *getInstance();
+};
+
+class UIEventsQueue : public Queue {
+private:
+    UIEventsQueue();
+public:
+    ~UIEventsQueue();
+    static UIEventsQueue *getInstance();
 };
 
 #endif

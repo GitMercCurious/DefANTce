@@ -8,6 +8,7 @@ struct ModelSettings {
     Extent2D extent;
     float fps;
     float velocity;
+    bool delete_particle;
 };
 
 /* class that will model the system */

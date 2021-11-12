@@ -46,10 +46,10 @@ int Renderer::renderFrame() {
                 break;
             case sf::Event::MouseButtonPressed:
                 if (event.mouseButton.button == sf::Mouse::Left) {
-                    auto *pEvent = new AddParticleEvent;
+                    auto *pEvent = new MouseClickEvent;
                     pEvent->x = (double)event.mouseButton.x;
                     pEvent->y = (double)event.mouseButton.y;
-                    pModelingQueue->add(pEvent);
+                    pUIEventsQueue->add(pEvent);
                 }
                 break;
             default:

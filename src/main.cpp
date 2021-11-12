@@ -5,6 +5,9 @@
 #include <misc.h>
 
 int main() {
+    Controller::controllerSettings = {
+        .fps = FPS,
+    };
     Controller::rendererSettings = {
         .app_name = APP_NAME,
         .extent = WINDOW_EXTENT,
@@ -16,6 +19,7 @@ int main() {
         .extent = WINDOW_EXTENT,
         .fps = FPS,
         .velocity = VEL,
+        .delete_particle = false,
     };
     Controller *pController = Controller::getInstance();
     pController->run();

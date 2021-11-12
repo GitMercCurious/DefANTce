@@ -6,8 +6,13 @@
 
 #include <queue.h>
 #include <misc.h>
+#include <fps_utils.h>
 
 #include <string>
+
+struct ControllerSettings {
+    float fps;
+};
 
 /* class that will be a middleman between renderer and model */
 class Controller {
@@ -23,10 +28,16 @@ private:
     /* queues */
     RenderingQueue *pRenderingQueue;
     ModelingQueue *pModelingQueue;
+    UIEventsQueue *pUIEventsQueue;
     /* enf of queues */
 
+    FpsHandler fpsHandler;
+
     Controller();
+
+    void __convert_events();
 public:
+    inline static ControllerSettings controllerSettings;
     inline static ModelSettings modelSettings;
     inline static RendererSettings rendererSettings;
 

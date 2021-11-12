@@ -1,19 +1,23 @@
 #include <controller.h>
 
-#include <consts.h>
+#include <fps_utils.h>
 
 #include <chrono>
 #include <thread>
 
-Controller::Controller() {
+Controller::Controller()
+    : fpsHandler(controllerSettings.fps)
+{
     pRenderingQueue = RenderingQueue::getInstance();
     pModelingQueue = ModelingQueue::getInstance();
+    pUIEventsQueue = UIEventsQueue::getInstance();
     
     Renderer::settings = rendererSettings;
     Model::settings = modelSettings;
 
     Renderer::pRenderingQueue = pRenderingQueue;
-    Renderer::pModelingQueue = pModelingQueue;
+    Renderer::pUIEventsQueue = pUIEventsQueue;
+
     Model::pRenderingQueue = pRenderingQueue;
     Model::pModelingQueue = pModelingQueue;
 
@@ -28,15 +32,34 @@ Controller *Controller::getInstance() {
 
 Controller::~Controller() {}
 
+void Controller::__convert_events() {
+    pUIEventsQueue->poll([this](const QueueEvent &ev) {
+        switch (ev.getType()) {
+            case QueueEventType::MOUSE_CLICK:
+            {
+                auto *pEv = dynamic_cast<const MouseClickEvent *>(&ev);
+                auto *pEvent = new AddParticleEvent;
+                pEvent->x = pEv->x;
+                pEvent->y = pEv->y;
+                pModelingQueue->add(pEvent);
+                break;
+            }
+            default:
+                break;
+        }
+    });
+}
+
 void Controller::run() {
     while (true) {
-        auto t_start = std::chrono::high_resolution_clock::now();
+        fpsHandler.startFrame();
         pModel->modelFrame();
+
+        __convert_events();
+
         if (pRenderer->renderFrame()) {
             break;
         }
-        auto t_end = std::chrono::high_resolution_clock::now();
-        double elapsed_time_ms = std::chrono::duration<double, std::milli>(t_end-t_start).count();
-        std::this_thread::sleep_for(std::chrono::milliseconds((int)(1000.0 / FPS - elapsed_time_ms)));
+        fpsHandler.hang();
     }
 }

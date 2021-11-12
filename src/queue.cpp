@@ -11,7 +11,8 @@ Queue::~Queue() {
     queue.clear();
 }
 
-void Queue::poll(void (*callback)(const QueueEvent &)) {
+/* void Queue::poll(void (*callback)(const QueueEvent &)) { */
+void Queue::poll(std::function<void(const QueueEvent &)> callback) {
     for (auto &pEvent : queue) {
         callback(*pEvent);
         delete pEvent;
@@ -30,6 +31,9 @@ RenderingQueue::~RenderingQueue() {}
 ModelingQueue::ModelingQueue() {}
 ModelingQueue::~ModelingQueue() {}
 
+UIEventsQueue::UIEventsQueue() {}
+UIEventsQueue::~UIEventsQueue() {}
+
 ModelingQueue *ModelingQueue::getInstance() {
     static ModelingQueue modellingQueue;
     return &modellingQueue;
@@ -38,4 +42,9 @@ ModelingQueue *ModelingQueue::getInstance() {
 RenderingQueue *RenderingQueue::getInstance() {
     static RenderingQueue renderingQueue;
     return &renderingQueue;
+}
+
+UIEventsQueue *UIEventsQueue::getInstance() {
+    static UIEventsQueue uiEventsQueue;
+    return &uiEventsQueue;
 }

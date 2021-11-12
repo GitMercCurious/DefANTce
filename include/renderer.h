@@ -33,7 +33,7 @@ private:
 public:
     inline static RendererSettings settings;
     inline static RenderingQueue *pRenderingQueue;
-    inline static ModelingQueue *pModelingQueue;
+    inline static UIEventsQueue *pUIEventsQueue;
 
     Renderer(const Renderer &) = delete;
     Renderer &operator=(const Renderer &) = delete;

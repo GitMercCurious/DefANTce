@@ -5,6 +5,7 @@
 #include <cmath>
 #include <random>
 #include <chrono>
+#include <iostream>
 
 std::default_random_engine r_engine = std::default_random_engine(std::chrono::steady_clock::now().time_since_epoch().count());
 
@@ -12,7 +13,9 @@ Model::Model()
     : system(std::list<Particle>())
 {}
 
-Model::~Model() {}
+Model::~Model() {
+    std::cerr << system.size() << '\n';
+}
 
 Model *Model::getInstance() {
     static Model model;
@@ -21,16 +24,20 @@ Model *Model::getInstance() {
 
 void Model::modelFrame() {
     /* polling pModelingQueue */
-    pModelingQueue->poll([](const QueueEvent &ev) {
+    pModelingQueue->poll([this](const QueueEvent &ev) {
         switch (ev.getType()) {
             case QueueEventType::ADD_PARTICLE:
             {
                 auto pEvent = dynamic_cast<const AddParticleEvent *>(&ev);
                 double angle;
                 double r = settings.velocity;
-                std::uniform_real_distribution<double> d(0, 2*M_PI);
-                angle = d(r_engine);
-                Model::getInstance()->system.push_back({{pEvent->x, pEvent->y}, {r * cos(angle), r * sin(angle)}, true});
+                unsigned i, CNT;
+                CNT = 1000;
+                for (i = 0; i < CNT; ++i) {
+                    std::uniform_real_distribution<double> d(0, 2*M_PI);
+                    angle = d(r_engine);
+                    system.push_back({{pEvent->x, pEvent->y}, {r * cos(angle), r * sin(angle)}, true});
+                }
                 break;
             }
             case QueueEventType::INVALID:
@@ -43,16 +50,30 @@ void Model::modelFrame() {
     for (auto &particle : system) { /* FIXME: try to do everything in 1 pass */
         particle.x += particle.vx / settings.fps;
         particle.y += particle.vy / settings.fps;
-        if (particle.x >= 0 && particle.x < settings.extent.x &&
-            particle.y >= 0 && particle.y < settings.extent.y) {
-            /* adding event to pRenderingQueue */
+        
+        if (settings.delete_particle) {
+            if (particle.x >= 0 && particle.x < settings.extent.x &&
+                particle.y >= 0 && particle.y < settings.extent.y) {
+                /* adding event to pRenderingQueue */
+                auto *pEvent = new RenderParticleEvent();
+                pEvent->x = particle.x;
+                pEvent->y = particle.y;
+                pRenderingQueue->add(pEvent);
+            } else {
+                /* marking particle as invalid */
+                particle.valid = false;
+            }
+        } else {
+            if (!(particle.x >= 0 && particle.x < settings.extent.x)) {
+                particle.vx *= -1;
+            }
+            if (!(particle.y >= 0 && particle.y < settings.extent.y)) {
+                particle.vy *= -1;
+            }
             auto *pEvent = new RenderParticleEvent();
             pEvent->x = particle.x;
             pEvent->y = particle.y;
             pRenderingQueue->add(pEvent);
-        } else {
-            /* marking particle as invalid */
-            particle.valid = false;
         }
     }
 

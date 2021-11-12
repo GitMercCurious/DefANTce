@@ -1,20 +1,21 @@
 #ifndef __EVENT_H__
 #define __EVENT_H__
 
-enum QueueEventType {
+enum class QueueEventType {
     INVALID = 0,
     RENDER_PARTICLE,
+    MOUSE_CLICK,
     ADD_PARTICLE,
 };
 
 class QueueEvent {
 protected:
-    enum QueueEventType eType;
+    QueueEventType eType;
 public:
     QueueEvent();
-    QueueEvent(enum QueueEventType);
+    QueueEvent(QueueEventType);
     virtual ~QueueEvent() = 0;
-    enum QueueEventType getType() const;
+    QueueEventType getType() const;
 };
 
 class RenderParticleEvent : public QueueEvent {
@@ -24,6 +25,15 @@ public:
 
     RenderParticleEvent();
     ~RenderParticleEvent();
+};
+
+class MouseClickEvent : public QueueEvent {
+public:
+    double x;
+    double y;
+
+    MouseClickEvent();
+    ~MouseClickEvent();
 };
 
 class AddParticleEvent : public QueueEvent {
