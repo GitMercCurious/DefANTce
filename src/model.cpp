@@ -32,11 +32,14 @@ void Model::modelFrame() {
                 double angle;
                 double r = settings.velocity;
                 unsigned i, CNT;
-                CNT = 1000;
+                CNT = 100000;
                 for (i = 0; i < CNT; ++i) {
                     std::uniform_real_distribution<double> d(0, 2*M_PI);
                     angle = d(r_engine);
-                    system.push_back({{pEvent->x, pEvent->y}, {r * cos(angle), r * sin(angle)}, true});
+                    system.push_back({
+                            {(float)pEvent->x, (float)pEvent->y},
+                            {(float)(r * cos(angle)), (float)(r * sin(angle))},
+                            true,});
                 }
                 break;
             }

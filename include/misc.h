@@ -17,17 +17,17 @@ struct Extent2D {
 struct Particle {
     union {
         struct {
-            double x;
-            double y;
+            float x;
+            float y;
         };
-        double r[2];
+        float r[2];
     };
     union {
         struct {
-            double vx;
-            double vy;
+            float vx;
+            float vy;
         };
-        double v[2];
+        float v[2];
     };
     bool valid;
 };
