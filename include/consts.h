@@ -13,7 +13,7 @@ const std::string APP_NAME = "Balls";
 
 const float VEL = 100.0;
 
-const int CIRCLE_SIZE = 10;
+const int CIRCLE_SIZE = 5;
 
 const Color BALL_COLOR = {255, 0, 0, 255,};
 const Color BG_COLOR = {0, 255, 0, 255,};
