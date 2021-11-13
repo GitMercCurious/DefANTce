@@ -58,7 +58,7 @@ void Model::modelFrame() {
             if (particle.x >= 0 && particle.x < settings.extent.x &&
                 particle.y >= 0 && particle.y < settings.extent.y) {
                 /* adding event to pRenderingQueue */
-                auto *pEvent = new RenderParticleEvent();
+                auto *pEvent = new RenderParticleEvent;
                 pEvent->x = particle.x;
                 pEvent->y = particle.y;
                 pRenderingQueue->add(pEvent);
@@ -73,12 +73,19 @@ void Model::modelFrame() {
             if (!(particle.y >= 0 && particle.y < settings.extent.y)) {
                 particle.vy *= -1;
             }
-            auto *pEvent = new RenderParticleEvent();
+            auto *pEvent = new RenderParticleEvent;
             pEvent->x = particle.x;
             pEvent->y = particle.y;
             pRenderingQueue->add(pEvent);
         }
     }
 
-    system.remove_if([](Particle p) {return !(p.valid);});
+    if (settings.delete_particle) {
+        system.remove_if([](Particle p) {return !(p.valid);});
+    } else {
+        /*
+        auto *pEvent = new RenderManyParticlesEvent;
+        pEvent->particleList = system;
+        pRenderingQueue->add(pEvent); */
+    }
 }

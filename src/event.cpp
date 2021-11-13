@@ -12,6 +12,10 @@ RenderParticleEvent::RenderParticleEvent()
     : QueueEvent(QueueEventType::RENDER_PARTICLE) {}
 RenderParticleEvent::~RenderParticleEvent() {}
 
+RenderManyParticlesEvent::RenderManyParticlesEvent()
+    : QueueEvent(QueueEventType::RENDER_MANY_PARTICLES) {}
+RenderManyParticlesEvent::~RenderManyParticlesEvent() {}
+
 MouseClickEvent::MouseClickEvent()
     : QueueEvent(QueueEventType::MOUSE_CLICK) {}
 MouseClickEvent::~MouseClickEvent() {}

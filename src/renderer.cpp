@@ -19,7 +19,7 @@ sf::Color make_sfml_color(Color color) {
 
 int Renderer::renderFrame() {
     window.clear(make_sfml_color(settings.bg_color));
-    pRenderingQueue->poll([](const QueueEvent &ev) {
+    pRenderingQueue->poll([this](const QueueEvent &ev) {
         sf::CircleShape circle(settings.circle_size);
         switch (ev.getType()) {
             case QueueEventType::RENDER_PARTICLE:
@@ -27,8 +27,18 @@ int Renderer::renderFrame() {
                 auto *pEvent = dynamic_cast<const RenderParticleEvent *>(&ev);
                 circle.setFillColor(make_sfml_color(settings.ball_color));
                 circle.setPosition(pEvent->x - settings.circle_size, pEvent->y - settings.circle_size);
-                Renderer::getInstance()->window.draw(circle);
+                window.draw(circle);
                 break;
+            }
+            case QueueEventType::RENDER_MANY_PARTICLES:
+            {
+                auto *pEvent = dynamic_cast<const RenderManyParticlesEvent *>(&ev);
+                for (const auto &particle : (pEvent->particleList)) {
+                    sf::CircleShape _circle(settings.circle_size);
+                    _circle.setFillColor(make_sfml_color(settings.ball_color));
+                    _circle.setPosition(particle.x - settings.circle_size, particle.y - settings.circle_size);
+                    window.draw(_circle);
+                }
             }
             case QueueEventType::INVALID:
                 break; /* TODO: handle this case */

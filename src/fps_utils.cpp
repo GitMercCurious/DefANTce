@@ -1,5 +1,7 @@
 #include <fps_utils.h>
 
+#include <iostream>
+
 FpsHandler::FpsHandler(float fps)
     : state(FpsHandlerState::INVALID)
     , fps(fps)
@@ -19,4 +21,5 @@ void FpsHandler::hang() {
     }
     elapsed_time_ms = std::chrono::duration<double, std::milli>(end - start).count();
     std::this_thread::sleep_for(std::chrono::milliseconds((int)(1000.0 / fps - elapsed_time_ms)));
+    std::cerr << elapsed_time_ms << '\n';
 }

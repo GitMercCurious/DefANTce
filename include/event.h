@@ -1,9 +1,13 @@
 #ifndef __EVENT_H__
 #define __EVENT_H__
 
+#include <misc.h>
+#include <list>
+
 enum class QueueEventType {
     INVALID = 0,
     RENDER_PARTICLE,
+    RENDER_MANY_PARTICLES,
     MOUSE_CLICK,
     ADD_PARTICLE,
 };
@@ -25,6 +29,14 @@ public:
 
     RenderParticleEvent();
     ~RenderParticleEvent();
+};
+
+class RenderManyParticlesEvent : public QueueEvent {
+public:
+    std::list<Particle> particleList;
+
+    RenderManyParticlesEvent();
+    ~RenderManyParticlesEvent();
 };
 
 class MouseClickEvent : public QueueEvent {
